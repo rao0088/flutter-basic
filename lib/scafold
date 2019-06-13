@@ -1,0 +1,61 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+class  MyHomePage extends StatefulWidget{
+  @override
+  State<StatefulWidget> createState() {
+    return Homepage ();
+  }
+
+}
+
+class Homepage extends State <MyHomePage> {
+  void _superd(){
+
+    print("super admin click");
+
+}
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(leading:Icon(Icons.arrow_back),
+        title: Text('Login page'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () => debugPrint('Search icon taped'),
+          ),
+          IconButton(
+            icon: Icon(Icons.supervisor_account),
+            onPressed: _superd,
+          ),
+        ],
+        //backgroundColor: Colors.green,
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Center(
+          child: Column(
+            children: <Widget>[
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Theme.of(context).backgroundColor,
+        tooltip: 'cloick',
+        child: Icon(Icons.person_add),
+        onPressed: ()=> debugPrint('hello'),
+      ),
+      bottomNavigationBar: BottomNavigationBar(
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.add,color: Theme.of(context).buttonColor,),title: Text("admin"),),
+          BottomNavigationBarItem(icon: Icon(Icons.delete),title: Text("delete")),
+          BottomNavigationBarItem(icon: Icon(Icons.menu),title: Text("menu")),
+        ],
+        backgroundColor: Theme.of(context).backgroundColor,
+        onTap: (int i) => debugPrint("this is click $i"),
+      ),
+    );
+  }
+}
