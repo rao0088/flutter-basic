@@ -1,0 +1,61 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+class MyHomePage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() {
+    return Homepage();
+  }
+}
+
+class Homepage extends State<MyHomePage> {
+
+   int _moneydata = 0;
+
+  void _userd(){
+    setState(() {
+      _moneydata = _moneydata +1;
+
+    });
+}
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: Icon(Icons.arrow_back),
+        title: Text('Money Multiplier'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () => debugPrint('clickme'),
+          )
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              Text('Get Rich Money MUltiPlier',
+                  style: TextStyle(
+                    fontSize: 20.0,
+                  )),
+              Center(
+                child: Text(
+                  "\$ $_moneydata",
+                  style: TextStyle(color: _moneydata < 2000 ? Colors.red :_moneydata > 10000 ? Colors.green : Colors.blue, fontSize: 30.0),
+                ),
+              ),
+
+              FlatButton(
+                color: Theme.of(context).buttonColor,
+                child: Text("Click Me"),
+                onPressed: _userd,
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
