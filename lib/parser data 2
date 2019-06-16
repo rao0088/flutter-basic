@@ -1,0 +1,80 @@
+import 'dart:convert';
+import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:http/http.dart' as http;
+
+List _data;
+void main() async {
+  _data = await getUser();
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Parser Data'),
+        centerTitle: true,
+      ),
+      body:ListView.builder(
+          itemCount:_data.length,
+          padding: const EdgeInsets.all(15.5),
+          itemBuilder:(BuildContext context, int position){
+            return Column(
+              children: <Widget>[
+              Divider(height: 15.5,color: Colors.green,),
+                ListTile(
+                  leading: CircleAvatar(backgroundColor: Colors.pink,
+                  child: Text('${_data[position]['title'][0].toUpperCase()}'),),
+                  title: Text('${_data[position]['title']}'),
+                  onTap:()=> showmessage(context,_data[position]['title']),
+                ),
+              ],
+            );
+          }
+      ),
+    );
+  }
+
+}
+
+void showmessage(BuildContext context ,String message) {
+  var alert = AlertDialog(
+    title: Text("My APP"),
+    content: Text(message),
+    actions: <Widget>[
+      FlatButton(
+        child: Text("Delete"),
+        onPressed:() {
+          Navigator.pop(context);
+        },
+      )
+    ],
+  );
+  //showDialog(context: context ,builder:(context) => alert);
+  showDialog(context: context ,child: alert);
+}
+
+
+Future<List> getUser() async {
+
+  String apiUrl = 'https://jsonplaceholder.typicode.com/albums';
+  http.Response response = await http.get(apiUrl);
+  
+  return json.decode(response.body);
+
+}
