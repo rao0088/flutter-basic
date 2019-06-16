@@ -1,0 +1,100 @@
+import 'dart:convert';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'dart:async';
+import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
+
+
+Map _data;
+List _datamain;
+
+void main() async {
+
+  _data = await getWeather();
+  _datamain =_data['features'];
+
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.green,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('EARTH QUICKS'),
+        leading:Icon(Icons.edit_location,color: Colors.white,),
+      ),
+      body: Center(
+        child: ListView.builder(
+           itemCount: _datamain.length,
+            padding: const EdgeInsets.all(14.5),
+            itemBuilder: (BuildContext context, int position){
+             var format = DateFormat.yMMMMd("en_US").add_jm();
+             var datetime =format.format(DateTime.fromMicrosecondsSinceEpoch(_datamain[position]['properties']['time']*1000));
+             return Column(
+             children: <Widget>[
+
+               Divider(height: 14.0,color: Colors.black,),
+               ListTile(
+                 leading: CircleAvatar(
+                   backgroundColor: Theme.of(context).backgroundColor,
+                   child: Text('${_datamain[position]['properties']['mag']}'),
+                 ),
+                 title: Text("AT: $datetime"),
+
+                 subtitle: Text('${_datamain[position]['properties']['place']}'),
+
+                 onTap:() => showmessage(context ,_datamain[position]['properties']['place']),
+
+               ),
+
+
+             ],
+
+             );
+
+        }),
+
+      ) ,
+    );
+  }
+
+}
+void showmessage (BuildContext context ,String message){
+var alert = AlertDialog(
+  title: Text('ALERT EARTH QUICES'),
+  content: Text(message),
+  actions: <Widget>[
+    FlatButton(
+      child: Text('ok'),
+      onPressed:(){
+        Navigator.pop(context);
+      },
+    )
+  ],
+) ;
+showDialog(context:context ,child: alert);
+}
+Future<Map> getWeather() async {
+
+  String apiUrl='https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_day.geojson';
+  http.Response response =await http.get(apiUrl);
+  return json.decode(response.body);
+
+}
