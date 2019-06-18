@@ -1,0 +1,142 @@
+import 'package:flutter/material.dart';
+//import 'package:project/ui/pages.dart';
+//import 'package:async/async.dart';
+void main (){
+
+   runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Wheater App',
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+      ),
+      home: MyHomePage(),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+
+  @override
+  _MyHomePageState createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+
+  var _textdata = TextEditingController();
+
+  Future _getdata(BuildContext context) async{
+
+    Map result = await Navigator.of(context).push(
+        MaterialPageRoute<Map>(builder: (BuildContext context){
+
+          return Page2(named:_textdata.text);
+
+        })
+
+    );
+
+    if(result != null && result.containsKey("info")){
+
+      print(result['info']);
+
+      _textdata.text = result['info'].toString();
+
+    }else{
+      print('Nothing');
+    }
+
+  }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('First Screen'),
+      ),
+      body: Container(
+        child: ListView(
+          children: <Widget>[
+            TextField(
+              decoration: InputDecoration(
+                labelText: 'Enter Name',
+                hintText: 'anything',
+              ),
+              controller: _textdata,
+            ),
+
+            RaisedButton(
+              child: Text(
+                'Submit'
+              ),
+             onPressed: () {_getdata(context);}
+//              {
+//                var router =MaterialPageRoute(
+//                  builder: (BuildContext context) => Page2(named : _textdata.text));
+//                Navigator.of(context).push(router);
+//              },
+            )
+
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class Page2 extends StatefulWidget {
+
+ final String named;
+
+
+  Page2({Key key, this.named}): super(key : key);
+
+  @override
+  _Page2State createState() => _Page2State();
+}
+
+class _Page2State extends State<Page2> {
+  final TextEditingController _screen2 = TextEditingController();
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('screen 2'),
+      ),
+       body: ListView(
+         children: <Widget>[
+           Padding(
+             padding: const EdgeInsets.all(18.0),
+             child: Text('${widget.named}'),
+           ),
+           TextField(
+             controller: _screen2,
+             decoration: InputDecoration(
+               labelText: 'input for back button',
+             ),
+           ),
+           FlatButton(
+             child: Text('BACK'),
+             onPressed: () {
+
+               Navigator.pop(context,{
+                 "info" : _screen2.text
+               });
+
+             },
+           )
+
+         ],
+       ) ,
+//      body: ListTile(
+//        title: Text('${widget.named}'),
+//      ),
+    );
+  }
+}
+
+
